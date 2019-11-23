@@ -1,0 +1,26 @@
+{
+  "name": "fitafitblog",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "nodemon src/.",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Gabriel Borges <gabrielborc@gmail.com>",
+  "license": "ISC",
+  "dependencies": {
+    "@hapi/hapi": "^18.4.0",
+    "@hapi/joi": "^16.1.7",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "hapi-router": "^5.0.0",
+    "hapi-sequelizejs": "^3.1.0",
+    "http-status": "^1.4.0",
+    "mysql2": "^2.0.0",
+    "sequelize": "^5.21.2"
+  },
+  "devDependencies": {
+    "nodemon": "^1.19.4"
+  }
+}
