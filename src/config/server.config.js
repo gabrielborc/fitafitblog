@@ -1,11 +1,12 @@
 import Hapi from '@hapi/hapi';
-import Database from './Database';
+import Database from './database.config';
 import HapiAuthJWT from 'hapi-auth-jwt2';
+import Env from './environoment.config';
 
 class Server {
     constructor() {
         this._server = Hapi.server({
-            port: 3000,
+            port: Env.PORT,
             host: 'localhost'
         });
     }
@@ -14,6 +15,12 @@ class Server {
         await this._server.start();
         await this._plugins();
         await this._strategy();
+        console.log('Server runnig on 3000');
+
+        process.on('unhandledRejection', (err) => {
+            console.log(err);
+            process.exit(1);
+        });
     }
 
     async _plugins () {
@@ -43,9 +50,9 @@ class Server {
 
     async _strategy() {
         await this._server.auth.strategy('jwt', 'jwt', {
-            key: 'stubJWT',
+            key: Env.JWT_SECRET,
             validate: async (decoded, request, h) => {
-                return { isValid: true }
+                return { isValid: true, credentials: decoded }
             }
         });        
 

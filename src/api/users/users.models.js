@@ -13,5 +13,9 @@ export default (sequelize, dataTypes) => {
         user.password = hash;
     });
 
+    User.associate = models => {
+        models.User.hasMany(models.Post, { as: "tags", foreignKey: "userId" });
+    };
+
     return User;
 }

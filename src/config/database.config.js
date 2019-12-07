@@ -1,13 +1,13 @@
 import { Sequelize } from 'sequelize';
-import {} from 'dotenv/config';
+import Env from './environoment.config';
 
 class Database  {
     constructor() {
         this._sequelize = null;
-        this._dbName = process.env.DB_NAME;
-        this._dbUser = process.env.DB_USER;
-        this._dbPass = process.env.DB_PASS;
-        this._dbHost = process.env.DB_HOST;
+        this._dbName = Env.DB_NAME;
+        this._dbUser = Env.DB_USER;
+        this._dbPass = Env.DB_PASS;
+        this._dbHost = Env.DB_HOST;
     }
 
     async _conn() {

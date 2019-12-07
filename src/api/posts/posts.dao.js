@@ -13,7 +13,8 @@ class PostsDao {
     async findById(id) {
         const params = {
             include: [
-                'tags'
+                'tags',
+                'user'
             ]
         };
 

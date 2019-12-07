@@ -13,8 +13,9 @@ class PostsController {
     }
 
     async create(req, h) {
-        let { payload } = req;
-        const post = await PostsDAO.create(payload);
+        const { auth:  { credentials }, payload } = req;
+        const {  id:userId  } = credentials;
+        const post = await PostsDAO.create({ ...payload, userId});
 
         return h.response(post).code(CREATED);
     }

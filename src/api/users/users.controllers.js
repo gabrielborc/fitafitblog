@@ -1,5 +1,6 @@
-import { CREATED, NO_CONTENT } from 'http-status';
 import UsersDao from './users.dao';
+import { getToken, authenticate } from '../utils/auth';
+
 
 class UsersController {
     async list(req, h) {
@@ -19,7 +20,10 @@ class UsersController {
 
     async login(request, h) {
         const { payload } = request;
-        return await UsersDao.authenticate(payload);
+        const user = await authenticate(payload);
+        const token = getToken({ id: user.id, email: user.email });
+
+        return { user, token };
     }
 }
 

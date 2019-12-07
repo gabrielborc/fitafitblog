@@ -9,6 +9,7 @@ export default (sequelize, dataTypes) => {
 
     Post.associate = models => {
         models.Post.hasMany(models.Tag, { as: "tags", foreignKey: "postId" });
+        models.Post.belongsTo(models.User, { as: "user", foreignKey: "userId"});
     }
 
     return Post;
