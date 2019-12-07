@@ -1,54 +1,49 @@
 import { instances } from 'hapi-sequelizejs';
 import PostsDAO from '../posts/posts.dao';
-
-const Tag = instances.getModel('Tag');
+import Boom from '@hapi/boom';
 
 class TagsDao {
-
-    findAll(idPost) {
-        return Tag.findAll({where: {postId: idPost}});
+    constructor() {
+        this.model = instances.getModel('Tag');
     }
 
-    findById(idPost, idTag) {
-        return Tag.findOne({where: {postId: idPost, id: idTag}});
+    findAll(idPost) {
+        return this.model.findAll({where: {postId: idPost}});
+    }
+
+    async findById(idPost, idTag) {
+        const tag = await this.model.findOne({where: {postId: idPost, id: idTag}});
+        
+        if (!tag) {
+            throw Boom.notFound();
+        }
+
+        return tag;
     }
 
     async create(idPost, tag) {
         const post = await PostsDAO.findById(idPost);
-        
-        if (! post) {
-            return null;
-        }
+        const tagNew = await this.model.create(tag);
 
-        const tagNew = await Tag.create(tag);
         await tagNew.setPost(post);
 
         return tagNew;
     }
 
-    async update(idPost, idTag, tag) {
+    async update(idPost, idTag, data) {
         const post = await PostsDAO.findById(idPost);
-        
-        if (! post) {
-            return null;
-        }       
+        const tag = await this.findById(idPost, idTag);
 
-        await Tag.update(tag, { where: {postId: idPost, id: idTag}});
-        let tagUpdate = await Tag.findByPk(idTag);
-        
-        if (! tagUpdate) {
-            return null;
-        }
+        await tag.update(data);
+        await tag.setPost(post);
 
-        await tagUpdate.setPost(post);
-
-        return tagUpdate;
+        return tag;
     }
 
     async delete(idPost, idTag) {
-        return await Tag.destroy({ where: {postId: idPost, id: idTag}});
+        const tag = await this.findById(idPost, idTag);
+        return tag.destroy();
     }
-
 }
 
 export default new TagsDao();

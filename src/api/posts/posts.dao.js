@@ -1,30 +1,44 @@
 import { instances } from 'hapi-sequelizejs';
-
-const Post = instances.getModel('Post');
+import Boom from '@hapi/boom';
 
 class PostsDao {
+    constructor() {
+        this.model = instances.getModel('Post');
+    }
     
     findAll() {
-        return Post.findAll(); 
+        return this.model.findAll(); 
     }
 
-    findById(id) {
-        return Post.findByPk(id);
+    async findById(id) {
+        const params = {
+            include: [
+                'tags'
+            ]
+        };
+
+        let post = await this.model.findByPk(id, params);
+
+        if (!post) {
+            throw Boom.notFound();
+        }
+
+        return post;
     }
 
     create(post) {
-        return Post.create(post);
+        return this.model.create(post);
     }
 
-    async update(id, post) {
-        await Post.update(post, { where: { id }});
-        return Post.findByPk(id);
+    async update(id, data) {
+        const post = await this.findById(id);
+        return post.update(data);
     }
 
-    delete(id) {
-        return Post.destroy({ where: { id }});
+    async delete(id) {
+        const post = await this.findById(id);
+        return  post.destroy();
     }
-
 }
 
 export default new PostsDao();

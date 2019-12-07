@@ -5,7 +5,6 @@ export default (sequelize, dataTypes) => {
     
     Tag.init({
         name: dataTypes.STRING,
-        postId: dataTypes.INTEGER,
     }, { sequelize, modelName: 'Tag'});
 
     Tag.associate = (models) => {

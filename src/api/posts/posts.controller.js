@@ -28,8 +28,8 @@ class PostsController {
 
     async delete(req, h) {
         const { id } = req.params;
-        await PostsDAO.delete(id)
-
+        await PostsDAO.delete(id);
+        
         return h.response().code(NO_CONTENT);
     }
 
